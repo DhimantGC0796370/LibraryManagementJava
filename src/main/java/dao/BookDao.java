@@ -9,35 +9,46 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import model.Books;
-import model.Publisher;
+
+/**
+ * 
+ * @author vaibhavhooda Description - This class helps us to connect with the
+ *         books database table and lets us issue, update and delete books and
+ *         store data in the database. Also, it gets list of books existing in
+ *         the table.
+ */
 
 public class BookDao {
 
-	
+	/**
+	 * 
+	 * @return ArrayList<Books>
+	 * @throws ClassNotFoundException Description - This method helps to get the
+	 *                                books data in list of array from database.
+	 */
 	public static ArrayList<Books> getBooks() throws ClassNotFoundException {
 
-		// create sql statement
+		// select sql statement
 		String SELECT_SQL = "SELECT * FROM Books";
 		ArrayList<Books> bookList = new ArrayList<Books>();
 
-		Class.forName("com.mysql.jdbc.Driver");
+		Class.forName("com.mysql.jdbc.Driver"); // class for mysql jdbc driver
 
-		try{
-			
-			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root", ""); 
+		try {
+
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root", "");
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery(SELECT_SQL);
-			 while(rs.next())
-		     {
-				 Books book = new Books();
-				 book.setBook_id(rs.getInt("Book_Id"));
-				 book.setAuthor(rs.getString("Author"));
-				 book.setAvailable(rs.getBoolean("Available"));
-				 book.setPrice(rs.getInt("Price"));
-				 book.setTitle(rs.getString("Title"));
-				
-				 bookList.add(book);
-		     }
+			while (rs.next()) {
+				Books book = new Books();
+				book.setBook_id(rs.getInt("Book_Id"));
+				book.setAuthor(rs.getString("Author"));
+				book.setAvailable(rs.getBoolean("Available"));
+				book.setPrice(rs.getInt("Price"));
+				book.setTitle(rs.getString("Title"));
+
+				bookList.add(book);
+			}
 		}
 
 		catch (SQLException e) {
@@ -46,28 +57,28 @@ public class BookDao {
 		}
 		return bookList;
 	}
-	
-	
-	
-	/*
-	 * Creating a registerStudent method that takes student object as parameter
-	 * STUDENT TBL. ID - INT FIRSTNAME - STRING LASTNAME - STRING GRADE - STRING
+
+	/**
+	 * 
+	 * @param book
+	 * @return int
+	 * @throws ClassNotFoundException Description - This method helps to update the
+	 *                                books data in the database.
 	 */
-	
-	
+
 	public static int update(Books book) throws ClassNotFoundException {
 
-		// create sql statement
+		// update sql statement
 		String UPDATE_BOOK_SQL = "update Books " + "set Author=?, Title=?, Price=?, Available=? " + "where Book_Id=?;";
 
 		int result = 0;
-		
-		Class.forName("com.mysql.cj.jdbc.Driver");
 
+		Class.forName("com.mysql.cj.jdbc.Driver"); // class for mysql jdbc driver
 
-		try{
+		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root", "Hooda@1130"); 
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root",
+					"Hooda@1130");
 			PreparedStatement ps = connection.prepareStatement(UPDATE_BOOK_SQL);
 			ps.setString(1, book.getAuthor());
 			ps.setString(2, book.getTitle());
@@ -86,18 +97,25 @@ public class BookDao {
 		}
 		return result;
 	}
-	
+
+	/**
+	 * 
+	 * @param book
+	 * @return int
+	 * @throws ClassNotFoundException Description - This method helps to delete the
+	 *                                books data in the database.
+	 */
 	public static int delete(Books book) throws ClassNotFoundException {
 
-		// create sql statement
+		// delete sql statement
 		String DELETE_BOOK_SQL = "delete from Books " + "where Book_Id=?;";
 
 		int result = 0;
 
-
-		try{
+		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root", "Hooda@1130"); 
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root",
+					"Hooda@1130");
 			PreparedStatement ps = connection.prepareStatement(DELETE_BOOK_SQL);
 			ps.setInt(1, book.getBook_id());
 
@@ -112,10 +130,10 @@ public class BookDao {
 		}
 		return result;
 	}
-	
-		/*
-		 *  Exception -function for printing SQL State, Error Code and Message .. 
-		 */
+
+	/*
+	 * Exception -function for printing SQL State, Error Code and Message ..
+	 */
 
 	private static void printSQLException(SQLException ex) {
 
@@ -137,5 +155,5 @@ public class BookDao {
 		}
 
 	}
-	
+
 }

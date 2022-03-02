@@ -10,74 +10,87 @@ import java.util.ArrayList;
 
 import model.Borrow;
 
+/**
+ * 
+ * @author dhimantgodhani Description - This class helps us to connect with the
+ *         borrow database table and lets us issue books and store data in the
+ *         database. Also, it gets list of borrowed books existing in the table.
+ */
 public class BorrowDao {
 
-	/*
-	 * Creating a registerStudent method that takes student object as parameter
-	 * STUDENT TBL. ID - INT FIRSTNAME - STRING LASTNAME - STRING GRADE - STRING
+	/**
+	 * 
+	 * @param borrow
+	 * @return int
+	 * @throws ClassNotFoundException Description - This method helps to issue the
+	 *                                books, borrow and members data in the
+	 *                                database.
 	 */
 
 	public static int issue(Borrow borrow) throws ClassNotFoundException {
-		
-		// create sql statement 
-		String INSERT_USER_SQL = "INSERT INTO Borrow_By" +
-				"(Book_Id, Member_Id, Issue_Date, Return_Date, Due_Date) VALUES " +
-				"(?,?,?,?,?);";
-		
+
+		// insert sql statement
+		String INSERT_USER_SQL = "INSERT INTO Borrow_By"
+				+ "(Book_Id, Member_Id, Issue_Date, Return_Date, Due_Date) VALUES " + "(?,?,?,?,?);";
+
 		int result = 0;
-		
-		Class.forName("com.mysql.jdbc.Driver");
-		
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "");
-		PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL)){
-			
-						
+
+		Class.forName("com.mysql.jdbc.Driver"); // class for mysql jdbc driver
+
+		try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "");
+				PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL)) {
+
 			ps.setInt(1, borrow.getBook_id());
 			ps.setInt(2, borrow.getMember_id());
 			ps.setString(3, borrow.getIssue_date());
 			ps.setString(4, borrow.getReturn_date());
 			ps.setString(5, borrow.getDue_date());
-			
-			
+
 			System.out.println(ps);
-				
+
 			result = ps.executeUpdate();
 		}
-				
+
 		catch (SQLException e) {
 			System.out.print(e.getMessage());
-			printSQLException(e);  // calling printSQLException function...
-				}
+			printSQLException(e); // calling printSQLException function...
+		}
 		return result;
-	}		
-	
+	}
+
+	/**
+	 * 
+	 * @return ArrayList<Borrow>
+	 * @throws ClassNotFoundException Description - This method helps to get the
+	 *                                borrowed books data in list of array from
+	 *                                database.
+	 */
 	public static ArrayList<Borrow> getBorrowDetails() throws ClassNotFoundException {
-		
+
+		// select sql statement
 		String SELECT_SQL = "SELECT bk.Title, bk.Author, m.m_name, bb.Due_Date, bb.Return_Date, bb.Issue_Date "
-				+ "FROM Borrow_By bb "
-				+ "join books bk on bk.Book_Id = bb.Book_Id "
+				+ "FROM Borrow_By bb " + "join books bk on bk.Book_Id = bb.Book_Id "
 				+ "join Member m on m.m_id = bb.Member_Id";
 		ArrayList<Borrow> borrowList = new ArrayList<Borrow>();
 
-		Class.forName("com.mysql.jdbc.Driver");
+		Class.forName("com.mysql.jdbc.Driver"); // class for mysql jdbc driver
 
-		try{
-			
+		try {
+
 			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root",
-					"test1234"); 
+					"test1234");
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery(SELECT_SQL);
-			 while(rs.next())
-		     {
-				 Borrow borrow = new Borrow();
-				 borrow.setBook_name(rs.getString("Title"));
-				 borrow.setAuthor_name(rs.getString("Author"));
-				 borrow.setMember_name(rs.getString("m_name"));
-				 borrow.setDue_date(rs.getString("Due_Date"));
-				 borrow.setReturn_date(rs.getString("Return_Date"));
-				 borrow.setIssue_date(rs.getString("Issue_Date"));
-				 borrowList.add(borrow);
-		     }
+			while (rs.next()) {
+				Borrow borrow = new Borrow();
+				borrow.setBook_name(rs.getString("Title"));
+				borrow.setAuthor_name(rs.getString("Author"));
+				borrow.setMember_name(rs.getString("m_name"));
+				borrow.setDue_date(rs.getString("Due_Date"));
+				borrow.setReturn_date(rs.getString("Return_Date"));
+				borrow.setIssue_date(rs.getString("Issue_Date"));
+				borrowList.add(borrow);
+			}
 		}
 
 		catch (SQLException e) {
@@ -87,10 +100,10 @@ public class BorrowDao {
 		return borrowList;
 
 	}
-	
-		/*
-		 *  Exception -function for printing SQL State, Error Code and Message .. 
-		 */
+
+	/*
+	 * Exception -function for printing SQL State, Error Code and Message ..
+	 */
 
 	private static void printSQLException(SQLException ex) {
 
@@ -112,5 +125,5 @@ public class BorrowDao {
 		}
 
 	}
-	
+
 }
