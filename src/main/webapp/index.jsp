@@ -13,8 +13,8 @@
 		<input type="submit" name="login" value="Member" /><br><br>
 	</form>
 
-	<form action="Book.jsp" method="post">
-		<input type="submit" name="books" value="Books" /><br><br>
+	<form action="BookServlet" method="get">
+		<input type="submit" name="book" value="Books" /><br><br>
 	</form>
 	
 	<form action="PublisherServlet" method="get">

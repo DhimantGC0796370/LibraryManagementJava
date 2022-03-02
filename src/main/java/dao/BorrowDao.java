@@ -28,7 +28,7 @@ public class BorrowDao {
 		
 		Class.forName("com.mysql.jdbc.Driver");
 		
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "test1234");
+		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "");
 		PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL)){
 			
 						

@@ -6,11 +6,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
 import dao.BorrowDao;
+import dao.BookDao;
 import model.Borrow;
+import model.Publisher;
+import model.Books;
 
 /**
  * Servlet implementation class BookServlet
@@ -19,9 +24,11 @@ import model.Borrow;
 public class BookServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private BorrowDao borrowDao;
+	private BookDao bookDao;
     
 	public void init() {
 		borrowDao = new BorrowDao();
+		bookDao = new BookDao();
 	}
 	
 	/**
@@ -36,8 +43,16 @@ public class BookServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		ArrayList<Books> book = new ArrayList<Books>();
+		try {
+			book = bookDao.getBooks();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		request.setAttribute("book", book);
+		response.setContentType("text/html;charset=UTF-8");
+		request.getRequestDispatcher("Book.jsp").forward(request, response);
 	}
 
 	/**
@@ -78,10 +93,41 @@ public class BookServlet extends HttpServlet {
             
         }
         else if (request.getParameter("update") != null) {
+        	String book_id = request.getParameter("bookId");
+    		int bookId = Integer.parseInt(book_id);
+    		String author = request.getParameter("author");
+    		String price = request.getParameter("price");
+    		boolean available = Boolean.parseBoolean(request.getParameter("available"));
+    		String title = request.getParameter("titile");
+    		
+    		Books book = new Books();
+    		book.setBook_id(bookId);
+    		book.setAuthor(author);
+    		book.setAvailable(available);
+    		book.setTitle(title);
+    		book.setPrice(bookId);
+    		
+    		try {
+				bookDao.update(book);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			response.sendRedirect("BookServlet");// response goes to view!!
         	
         }
         else if(request.getParameter("delete") != null){
-        	
+        	String book_id = request.getParameter("bookId");
+    		int bookId = Integer.parseInt(book_id);
+    		
+    		Books book = new Books();
+    		book.setBook_id(bookId);
+    		
+    		try {
+				bookDao.delete(book);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			response.sendRedirect("BookServlet");// response goes to view!!
         }
         else {
         	response.sendRedirect("Book.jsp?status=no");//  response goes to view!!

@@ -29,7 +29,7 @@ public class MemberDao {
 		
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		
-		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "rootpassword");
+		try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Library", "root", "");
 		PreparedStatement ps = connection.prepareStatement(INSERT_USER_SQL)){
 			
 						

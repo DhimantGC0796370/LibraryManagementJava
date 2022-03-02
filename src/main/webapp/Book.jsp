@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" import="java.util.*, java.lang.*, model.Books" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -28,7 +28,7 @@
     		</tr>
     		<tr>
      			<td>Available:</td>
-     			<td><label>Yes</label><br></td>
+     			<td><input type="text" name="available" /></td>
     		</tr>
     		<tr>
      			<td>Member Id:</td>
@@ -43,5 +43,33 @@
     <input type="submit" name="update" value="Update Book">
     <input type="submit" name="delete" value="Delete Book">
   </form>
+  <br>
+  <br>
+  <table border="1" cellpadding="2" cellspacing="2">
+		<tr>
+		     <th>Book Id</th>
+		     <th>Author</th>
+		     <th>Title</th>
+		     <th>Price</th>
+		     <th>Available</th>
+	    </tr>
+	    <% 
+	    	ArrayList<Books> list = (ArrayList<Books>) request.getAttribute("book"); 
+	    	Books book = new Books();
+	     	for (int i=0; i < list.size(); i++) {
+           		book = list.get(i);
+        %>
+
+            <tr>
+                <td><%=book.getBook_id()%></td>
+                <td><%=book.getAuthor()%></td>
+                <td><%=book.getTitle()%></td>
+                <td><%=book.getPrice()%></td>
+                <td><%=book.isAvailable()%></td>
+            </tr>
+            <%
+            };
+            %>
+	</table>
 </body>
 </html>

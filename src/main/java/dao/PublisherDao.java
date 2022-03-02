@@ -26,8 +26,7 @@ public class PublisherDao {
 
 		try{
 			
-			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root",
-					"rootpassword"); 
+			Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/Library", "root", ""); 
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery(SELECT_SQL);
 			 while(rs.next())
